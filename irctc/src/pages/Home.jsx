@@ -1,6 +1,19 @@
 import SearchForm from "../components/SearchForm";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+
+  // Intialize navigate function
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       
@@ -10,10 +23,10 @@ export default function Home() {
           IRCTC NextGen
         </h1>
         <div className="space-x-3">
-          <button className="bg-orange-500 px-4 py-1 rounded text-sm">
+          <button onClick={handleLoginClick} className="bg-orange-500 px-4 py-1 rounded text-sm">
             LOGIN
           </button>
-          <button className="border border-white px-4 py-1 rounded text-sm">
+          <button onClick={handleRegisterClick} className="border border-white px-4 py-1 rounded text-sm">
             REGISTER
           </button>
         </div>
