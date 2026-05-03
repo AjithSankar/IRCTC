@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+
+    const navigate = useNavigate();
 
     // form state
     const [formData, setFormData] = useState({
@@ -20,10 +22,36 @@ function Register() {
         }));
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would typically send the formData to your backend for registration
-        console.log("Registering with:", formData);
+
+        if (formData.password !== formData.confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                alert('Registration successful! Please login.');
+                navigate('/login');
+            } else {
+                const errorText = await response.text();
+                alert(`Registration failed: ${errorText}`);
+            }
+
+        } catch (err) {
+            console.error("Registration failed:", err);
+            alert("An error occurred during registration. Please try again later.");
+        }
+
     };
 
     return (
@@ -40,6 +68,49 @@ function Register() {
                             type="text"
                             name="fullName"
                             value={formData.fullName}
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Age</label>
+                        <input
+                            type="integer"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">DateOfBirth</label>
+                        <input
+                            type="date"
+                            name="dateOfBirth"
+                            value={formData.dateOfBirth}
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Gender</label>
+                        <input
+                            type="text"
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Country</label>
+                        <input
+                            type="text"
+                            name="country"
+                            value={formData.country}
                             onChange={handleChange}
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         />

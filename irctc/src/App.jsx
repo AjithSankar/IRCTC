@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import TrainList from "./pages/TrainList";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Logout from "./components/auth/Logout";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/trains" element={<TrainList />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
+        <Route path="/logout" element={<Logout/>} />
       </Routes>
     </BrowserRouter>
   );

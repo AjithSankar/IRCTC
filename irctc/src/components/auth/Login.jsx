@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 function Login() {
+
+    const navigate = useNavigate();
 
     // State to hold user credentials
     const [credentials, setCredentials] = useState({
         email: "",
         password: ""
     });
+
+    const [error, setError] = useState('');
 
     // Handle input changes and update state
     const handleChange = (e) => {
@@ -19,10 +23,32 @@ function Login() {
 
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would typically send the credentials to your backend for authentication
-        console.log("Logging in with:", credentials);
+        setError('');
+
+        try {
+
+            const response = await fetch("http://localhost:8080/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(credentials),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("irctc_access_token", data.accessToken);
+                localStorage.setItem("irctc_refresh_token", data.refreshToken);
+                // Redirect to home page or dashboard after successful login
+                navigate("/");
+            } else {
+                setError('Login failed. Please check your credentials and try again.');
+            }
+        } catch (err) {
+            setError('An error occurred while trying to log in. Please try again later.');
+        }
     };
 
     return (
