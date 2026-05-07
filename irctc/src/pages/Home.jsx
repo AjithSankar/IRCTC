@@ -5,6 +5,7 @@ import {
     MapPin, User, Bell, Home as HomeIcon, ChevronRight 
 } from 'lucide-react';
 import { useAuth } from "../components/auth/AuthContext"; // Importing the AuthContext for authentication state
+import trainImg from "../assets/vande-bharat.jpg";
 
 export default function Home() {
   // Authentication State
@@ -35,7 +36,7 @@ export default function Home() {
       {/* BACKGROUND IMAGE OVERLAY */}
       <div className="absolute inset-0 z-0 h-[85vh]">
         <img 
-          src="https://images.unsplash.com/photo-1541427468627-a89a96e5ca1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+          src={trainImg} 
           alt="Train Background" 
           className="w-full h-full object-cover opacity-90"
         />
