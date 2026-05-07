@@ -4,10 +4,11 @@ import SearchForm from "../components/SearchForm"; // Your custom form component
 import { 
     MapPin, User, Bell, Home as HomeIcon, ChevronRight 
 } from 'lucide-react';
+import { useAuth } from "../components/auth/AuthContext"; // Importing the AuthContext for authentication state
 
 export default function Home() {
   // Authentication State
-  const isUserLoggedIn = !!localStorage.getItem("irctc_access_token");
+  const { isUserLoggedIn, logout } = useAuth();
 
   // Initialize navigate function
   const navigate = useNavigate();
@@ -20,13 +21,10 @@ export default function Home() {
     navigate("/register");
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (!confirmLogout) return;
-    
-    // It's good practice to clear the token here as well
-    localStorage.removeItem("irctc_access_token");
-    localStorage.removeItem("irctc_refresh_token"); 
+    await logout(); // Call the logout function from AuthContext
     
     navigate("/login"); // Or navigate("/logout") if you have a dedicated route
   };

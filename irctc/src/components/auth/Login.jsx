@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate} from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import api from "../../api/axiosSetup";
 
 function Login() {
 
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     // State to hold user credentials
     const [credentials, setCredentials] = useState({
@@ -29,19 +32,11 @@ function Login() {
 
         try {
 
-            const response = await fetch("http://localhost:8080/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(credentials),
-            });
+            const response = await api.post("/auth/login", credentials);
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("irctc_access_token", data.accessToken);
-                localStorage.setItem("irctc_refresh_token", data.refreshToken);
+            if (response.data.accessToken) {
                 // Redirect to home page or dashboard after successful login
+                login(response.data.accessToken);
                 navigate("/");
             } else {
                 setError('Login failed. Please check your credentials and try again.');
