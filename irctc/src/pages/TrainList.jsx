@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock, Home } from 'lucide-react';
 import api from '../api/axiosSetup'; // Use your configured Axios instance
 import axios from 'axios';
 
@@ -37,8 +37,8 @@ const TrainList = () => {
         if (err.name === 'CanceledError' || controller.signal.aborted) {
           console.log('Previous Search Request was cancelled');
           return;
-        } 
-        
+        }
+
         console.error("Actual API Error:", err);
         setError('Failed to fetch train schedules. Please try again later.');
 
@@ -103,10 +103,18 @@ const TrainList = () => {
         </div>
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-2 border border-white/30 rounded-lg hover:bg-white/10 transition"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white border border-blue-300 text-gray-700 rounded-xl font-bold hover:bg-blue-100 transition shadow-sm"
         >
           Modify Search
         </button>
+
+        <button 
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-blue-300 text-gray-700 rounded-xl font-bold hover:bg-blue-100 transition shadow-sm"
+          >
+            <Home className="w-4 h-4" /> Return to Home
+          </button>
+
       </div>
 
       {/* Train List */}

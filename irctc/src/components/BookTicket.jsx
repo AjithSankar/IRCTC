@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { UserPlus, Trash2, ShieldCheck, Info } from 'lucide-react';
+import { UserPlus, Trash2, ShieldCheck, Info, Home } from 'lucide-react';
 import api from '../api/axiosSetup';
 import { useAuth } from './auth/AuthContext';
 
 const BookTicket = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const {user} = useAuth(); // Get the logged-in user details from AuthContext
+  const { user } = useAuth(); // Get the logged-in user details from AuthContext
 
-  const from = searchParams.get('from'); 
+  const from = searchParams.get('from');
   const to = searchParams.get('to');
   const trainId = searchParams.get('trainId');
   const classType = searchParams.get('class');
@@ -96,10 +96,10 @@ const BookTicket = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 md:px-12">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* LEFT COLUMN: Passenger Forms */}
         <div className="lg:col-span-2 space-y-6">
-          
+
           {/* Train Summary Card */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 border-l-4 border-l-[#0b1b36]">
             <div className="flex justify-between items-start">
@@ -124,11 +124,11 @@ const BookTicket = () => {
             <form id="booking-form" onSubmit={handleProceedToPayment} className="space-y-6">
               {passengers.map((passenger, index) => (
                 <div key={index} className="p-4 bg-gray-50 rounded-xl border border-gray-200 relative">
-                  
+
                   {/* Remove Button */}
                   {passengers.length > 1 && (
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => handleRemovePassenger(index)}
                       className="absolute -top-3 -right-3 w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center hover:bg-red-200 transition shadow-sm"
                     >
@@ -137,12 +137,12 @@ const BookTicket = () => {
                   )}
 
                   <h4 className="font-bold text-gray-700 mb-4">Passenger {index + 1}</h4>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="md:col-span-2">
-                      <input 
-                        type="text" 
-                        placeholder="Full Name" 
+                      <input
+                        type="text"
+                        placeholder="Full Name"
                         value={passenger.name}
                         onChange={(e) => handlePassengerChange(index, 'name', e.target.value)}
                         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
@@ -150,9 +150,9 @@ const BookTicket = () => {
                       />
                     </div>
                     <div>
-                      <input 
-                        type="number" 
-                        placeholder="Age" 
+                      <input
+                        type="number"
+                        placeholder="Age"
                         min="1" max="120"
                         value={passenger.age}
                         onChange={(e) => handlePassengerChange(index, 'age', e.target.value)}
@@ -161,7 +161,7 @@ const BookTicket = () => {
                       />
                     </div>
                     <div>
-                      <select 
+                      <select
                         value={passenger.gender}
                         onChange={(e) => handlePassengerChange(index, 'gender', e.target.value)}
                         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
@@ -174,7 +174,7 @@ const BookTicket = () => {
                       </select>
                     </div>
                     <div className="md:col-span-2">
-                      <select 
+                      <select
                         value={passenger.preference}
                         onChange={(e) => handlePassengerChange(index, 'preference', e.target.value)}
                         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
@@ -191,8 +191,8 @@ const BookTicket = () => {
                 </div>
               ))}
 
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleAddPassenger}
                 className="text-blue-600 font-bold hover:underline flex items-center gap-1"
               >
@@ -206,7 +206,7 @@ const BookTicket = () => {
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 sticky top-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-4">Fare Summary</h3>
-            
+
             <div className="space-y-3 mb-6 text-gray-700 font-medium">
               <div className="flex justify-between">
                 <span>Ticket Fare ({passengers.length} x ₹{baseFare})</span>
@@ -227,14 +227,23 @@ const BookTicket = () => {
               <span className="text-2xl font-black text-[#0b1b36]">₹{totalFare + 17.7}</span>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               form="booking-form"
               className="w-full py-4 bg-orange-500 text-white rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg shadow-orange-500/30 flex justify-center items-center gap-2"
             >
               <ShieldCheck className="w-5 h-5" /> Proceed to Pay
             </button>
-            
+
+            {/* 🔹 NEW: Return to Home Button */}
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="w-full py-4 mt-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-bold text-lg hover:bg-gray-50 transition flex justify-center items-center gap-2"
+            >
+              <Home className="w-5 h-5" /> Cancel & Return Home
+            </button>
+
             <div className="mt-4 flex gap-2 text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
               <Info className="w-4 h-4 text-blue-500 shrink-0" />
               <p>By clicking Proceed, you agree to the Terms and Conditions of Indian Railways.</p>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Train, Calendar, Users, ChevronRight, AlertCircle, Clock } from 'lucide-react';
+import { Train, Calendar, Users, ChevronRight, AlertCircle, Clock, Home} from 'lucide-react';
 import { useAuth } from './auth/AuthContext';
 import api from '../api/axiosSetup';
 
@@ -54,7 +54,17 @@ const MyBookings = () => {
     <div className="min-h-screen bg-gray-50 py-8 px-4 md:px-12">
       <div className="max-w-4xl mx-auto">
         
-        <h1 className="text-3xl font-black text-[#0b1b36] mb-8">My Bookings</h1>
+        {/* 🔹 UPDATED: Flex container for Header and Home Button */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-black text-[#0b1b36]">My Bookings</h1>
+          
+          <button 
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-blue-300 text-gray-700 rounded-xl font-bold hover:bg-blue-100 transition shadow-sm"
+          >
+            <Home className="w-4 h-4" /> <ChevronRight className="w-4 h-4"/> Return to Home
+          </button>
+        </div>
 
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 flex items-center gap-2">
