@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import api, { setAccessToken } from '../../api/axiosSetup'; // The memory setter we made earlier
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 // 1. Create the Context
 const AuthContext = createContext();
@@ -9,6 +10,20 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
+    const [user, setUser] = useState(null);
+
+    // Helper function to decode and set user
+  const authenticateSession = (token) => {
+    setAccessToken(token);
+    try {
+      const decodedToken = jwtDecode(token);
+      // 3. Extract the ID. (Ensure your Spring Boot backend includes 'userId' as a claim in the JWT!)
+      setUser({ id: decodedToken.userId, email: decodedToken.sub }); 
+      setIsUserLoggedIn(true);
+    } catch (err) {
+      console.error("Invalid token format", err);
+    }
+  };
 
     // NEW: The Silent Refresh Logic
     useEffect(() => {
@@ -19,9 +34,7 @@ export const AuthProvider = ({ children }) => {
                     withCredentials: true
                 });
 
-                // If it succeeds, the user is still logged in!
-                setAccessToken(response.data.accessToken);
-                setIsUserLoggedIn(true);
+                authenticateSession(response.data.accessToken);
             } catch (error) {
                 // If it fails (no cookie, or expired cookie), do nothing. 
                 // They remain logged out.
@@ -37,8 +50,7 @@ export const AuthProvider = ({ children }) => {
 
     // Call this from Login.jsx after a successful login
     const login = (token) => {
-        setAccessToken(token); // Put it in Axios memory
-        setIsUserLoggedIn(true); // Update React state
+        authenticateSession(token);
     };
 
     // Call this from Home.jsx or a Navbar
@@ -53,6 +65,7 @@ export const AuthProvider = ({ children }) => {
             setAccessToken(null);
             // 3. Update React state
             setIsUserLoggedIn(false);
+            setUser(null);
         }
     };
 
@@ -68,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isUserLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ isUserLoggedIn, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { UserPlus, Trash2, ShieldCheck, Info } from 'lucide-react';
 import api from '../api/axiosSetup';
+import { useAuth } from './auth/AuthContext';
 
 const BookTicket = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const {user} = useAuth(); // Get the logged-in user details from AuthContext
 
+  const from = searchParams.get('from'); 
+  const to = searchParams.get('to');
   const trainId = searchParams.get('trainId');
   const classType = searchParams.get('class');
   const date = searchParams.get('date');
@@ -39,13 +43,49 @@ const BookTicket = () => {
     setPassengers(updatedPassengers);
   };
 
-  const handleProceedToPayment = (e) => {
+  const handleProceedToPayment = async (e) => {
     e.preventDefault();
     // Validate passengers
     const isValid = passengers.every(p => p.name.trim() !== '' && p.age !== '' && p.gender !== '');
     if (!isValid) {
       alert("Please fill in all passenger details.");
       return;
+    }
+
+    try {
+      // 2. Generate the unique idempotency key for this specific transaction attempt
+      const idempotencyKey = crypto.randomUUID();
+
+      // 3. Construct the payload matching your backend BookingRequestDTO
+      const bookingPayload = {
+        userId: user.id, // Use the logged-in user's ID from AuthContext
+        trainNumber: parseInt(trainId),
+        journeyDate: date,
+        sourceStation: from,
+        destinationStation: to,
+        classType: classType,
+        category: "GENERAL",
+        passengers: passengers.map(p => ({
+          name: p.name,
+          age: parseInt(p.age),
+          gender: p.gender
+        }))
+      };
+
+      // 4. Send the POST request
+      const response = await api.post('/v1/bookings', bookingPayload, {
+        headers: {
+          'Idempotency-Key': idempotencyKey
+        }
+      });
+
+      // 5. Instantly redirect to the processing screen using the returned bookingId
+      if (response.data && response.data.bookingId) {
+        navigate(`/processing/${response.data.bookingId}`);
+      }
+    } catch (error) {
+      console.error("Booking initiation failed:", error);
+      alert("Failed to initiate booking. Please try again.");
     }
 
     // In the next phase, we will submit this data to our Spring Boot backend!

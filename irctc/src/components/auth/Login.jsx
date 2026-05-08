@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate, useLocation} from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import api from "../../api/axiosSetup";
 
 function Login() {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useAuth();
+
+   // Check if they were redirected here from a protected route
+    const from = location.state?.from?.pathname + location.state?.from?.search || '/';
 
     // State to hold user credentials
     const [credentials, setCredentials] = useState({
@@ -37,7 +41,7 @@ function Login() {
             if (response.data.accessToken) {
                 // Redirect to home page or dashboard after successful login
                 login(response.data.accessToken);
-                navigate("/");
+                navigate(from, { replace: true }); // Send them back to the booking page!
             } else {
                 setError('Login failed. Please check your credentials and try again.');
             }
