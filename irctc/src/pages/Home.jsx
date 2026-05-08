@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import SearchForm from "../components/SearchForm"; // Your custom form component
-import { 
-    MapPin, User, Bell, Home as HomeIcon, ChevronRight 
+import {
+  MapPin, User, Bell, Home as HomeIcon, ChevronRight
 } from 'lucide-react';
 import { useAuth } from "../components/auth/AuthContext"; // Importing the AuthContext for authentication state
 import trainImg from "../assets/vande-bharat.jpg";
@@ -26,18 +26,18 @@ export default function Home() {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (!confirmLogout) return;
     await logout(); // Call the logout function from AuthContext
-    
+
     navigate("/login"); // Or navigate("/logout") if you have a dedicated route
   };
 
   return (
     <div className="min-h-screen relative font-sans text-gray-800 bg-gray-50 overflow-x-hidden">
-      
+
       {/* BACKGROUND IMAGE OVERLAY */}
       <div className="absolute inset-0 z-0 h-[85vh]">
-        <img 
-          src={trainImg} 
-          alt="Train Background" 
+        <img
+          src={trainImg}
+          alt="Train Background"
           className="w-full h-full object-cover opacity-90"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/40 to-transparent"></div>
@@ -45,7 +45,7 @@ export default function Home() {
 
       {/* CONTENT WRAPPER */}
       <div className="relative z-10 flex flex-col min-h-screen px-4 md:px-12 lg:px-24">
-        
+
         {/* --- TOP UTILITY BAR --- */}
         <header className="flex justify-between items-center py-3 text-sm font-medium border-b border-gray-300/30">
           <div className="flex items-center gap-3">
@@ -54,7 +54,7 @@ export default function Home() {
             </div>
             <span className="font-bold tracking-wide text-gray-900">INDIAN RAILWAYS</span>
           </div>
-          
+
           <div className="flex items-center gap-6 text-gray-700">
             <span className="hidden md:block">03 May 2026 17:37:22</span>
             <div className="flex gap-3">
@@ -64,7 +64,7 @@ export default function Home() {
             </div>
             <button className="hover:text-blue-600 font-semibold">हिंदी</button>
             <Bell className="w-5 h-5 cursor-pointer hover:text-blue-600" />
-            
+
             <div className="flex flex-col items-center leading-none text-blue-900">
               <span className="font-bold text-xl">IRCTC</span>
             </div>
@@ -82,26 +82,35 @@ export default function Home() {
             <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">E-Wallet</button>
             <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">Alerts</button>
             <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">Contact Us</button>
-            
+
             {/* Conditional Auth Buttons */}
-            <div className="ml-4 flex gap-2">
+            <div className="ml-4 flex items-center gap-2">
               {isUserLoggedIn ? (
-                <button 
-                  onClick={handleLogoutClick} 
-                  className="px-8 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition shadow-md"
-                >
-                  Logout
-                </button>
+                <>
+                  <button
+                    onClick={() => navigate('/my-bookings')}
+                    className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-semibold hover:bg-blue-900 transition shadow-md"
+                  >
+                    My Bookings
+                  </button>
+
+                  <button
+                    onClick={handleLogoutClick}
+                    className="px-8 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition shadow-md"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
                 <>
-                  <button 
-                    onClick={handleLoginClick} 
+                  <button
+                    onClick={handleLoginClick}
                     className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-semibold hover:bg-blue-900 transition shadow-md"
                   >
                     Login
                   </button>
-                  <button 
-                    onClick={handleRegisterClick} 
+                  <button
+                    onClick={handleRegisterClick}
                     className="px-6 py-3 border-2 border-[#0b1b36] text-[#0b1b36] bg-white rounded-full font-semibold hover:bg-gray-50 transition"
                   >
                     Register
@@ -114,10 +123,10 @@ export default function Home() {
 
         {/* --- MAIN HERO SECTION --- */}
         <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-12">
-          
+
           {/* LEFT: BOOKING WIDGET */}
           <div className="lg:col-span-5 bg-white rounded-3xl shadow-2xl p-8 border border-gray-100 h-fit">
-            
+
             {/* Optional Tabs */}
             <div className="flex gap-4 mb-6">
               <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-50 rounded-xl font-semibold border border-gray-200">
