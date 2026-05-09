@@ -10,6 +10,8 @@ import PaymentProcessing from "./components/PaymentProcessing";
 import TicketConfirmation from "./components/TicketConfirmation";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import MyBookings from "./components/MyBookings";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminRoute from "./components/auth/AdminRoute";  
 
 function App() {
   return (
@@ -48,6 +50,12 @@ function App() {
             <ProtectedRoute>
               <MyBookings />
             </ProtectedRoute>
+          } />
+
+          <Route path="/admin" element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
           } />
 
         </Routes>

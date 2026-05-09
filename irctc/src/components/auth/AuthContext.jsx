@@ -18,7 +18,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const decodedToken = jwtDecode(token);
       // 3. Extract the ID. (Ensure your Spring Boot backend includes 'userId' as a claim in the JWT!)
-      setUser({ id: decodedToken.userId, email: decodedToken.sub }); 
+      setUser({ 
+        id: decodedToken.userId, 
+        email: decodedToken.sub,
+        role: decodedToken.role 
+    }); 
       setIsUserLoggedIn(true);
     } catch (err) {
       console.error("Invalid token format", err);

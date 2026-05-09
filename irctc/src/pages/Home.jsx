@@ -9,7 +9,11 @@ import trainImg from "../assets/vande-bharat.jpg";
 
 export default function Home() {
   // Authentication State
-  const { isUserLoggedIn, logout } = useAuth();
+  const { isUserLoggedIn, logout, user } = useAuth();
+
+  if (user?.role !== null && user?.role !== undefined) {
+    console.log("User Role:", user.role); // Log the user's role for debugging
+  }
 
   // Initialize navigate function
   const navigate = useNavigate();
@@ -80,26 +84,25 @@ export default function Home() {
             <button className="px-4 py-2 bg-gray-100 rounded-full font-semibold">Trains</button>
             <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">Meals</button>
             <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">E-Wallet</button>
-            <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">Alerts</button>
-            <button className="px-4 py-2 hover:bg-gray-50 rounded-full font-medium transition">Contact Us</button>
 
+          
             {/* Conditional Auth Buttons */}
             <div className="ml-4 flex items-center gap-2">
               {isUserLoggedIn ? (
                 <>
-                  <button
-                    onClick={() => navigate('/my-bookings')}
-                    className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-semibold hover:bg-blue-900 transition shadow-md"
-                  >
-                    My Bookings
-                  </button>
+                  {/* 🔹 ONLY SHOW IF USER IS ADMIN */}
+                  {user?.role === 'ADMIN' && (
+                    <button 
+                      onClick={() => navigate('/admin')} 
+                      className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-bold hover:bg-blue-900 transition shadow-md"
+                    >
+                      Admin Panel
+                    </button>
+                  )}
 
-                  <button
-                    onClick={handleLogoutClick}
-                    className="px-8 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition shadow-md"
-                  >
-                    Logout
-                  </button>
+                  {/* Existing My Bookings & Logout buttons */}
+                  <button onClick={() => navigate('/my-bookings')} className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-semibold hover:bg-blue-900 transition shadow-md">My Bookings</button>
+                  <button onClick={handleLogoutClick} className="px-8 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition shadow-md">Logout</button>
                 </>
               ) : (
                 <>
@@ -111,7 +114,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={handleRegisterClick}
-                    className="px-6 py-3 border-2 border-[#0b1b36] text-[#0b1b36] bg-white rounded-full font-semibold hover:bg-gray-50 transition"
+                    className="px-6 py-3 bg-[#0b1b36] text-white rounded-full font-semibold hover:bg-blue-900 transition shadow-md"
                   >
                     Register
                   </button>
