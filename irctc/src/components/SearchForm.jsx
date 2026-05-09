@@ -1,110 +1,130 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, ArrowRightLeft, User, ChevronDown } from 'lucide-react';
+import { MapPin, Calendar, ArrowRightLeft, User, ChevronDown, Search } from 'lucide-react';
+
+const STATIONS = [
+  { code: 'MAS', name: 'Chennai Central' },
+  { code: 'CBE', name: 'Coimbatore Jn' },
+  { code: 'MTP', name: 'Mettupalayam' },
+  { code: 'AJJ', name: 'Arakkonam' },
+  { code: 'MDU', name: 'Madurai Jn' },
+  { code: 'TPJ', name: 'Tiruchirappalli' },
+  { code: 'SBC', name: 'KSR Bengaluru' }
+];
 
 const SearchForm = () => {
   const navigate = useNavigate();
-  
-  // 1. State to hold the search parameters
-  const [searchParams, setSearchParams] = useState({
-    from: 'MAS',
-    to: 'CBE',
-    date: '2026-05-03',
-    ticketClass: 'All Classes',
-    quota: 'GENERAL'
-  });
 
-  const handleChange = (e) => {
-    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
-  };
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const defaultDate = tomorrow.toISOString().split('T')[0];
+
+  // Controlled Form State
+  const [fromStation, setFromStation] = useState('MAS');
+  const [toStation, setToStation] = useState('CBE');
+  const [journeyDate, setJourneyDate] = useState(defaultDate);
 
   const handleSwap = () => {
-    setSearchParams({
-      ...searchParams,
-      from: searchParams.to,
-      to: searchParams.from
-    });
+    setFromStation(toStation);
+    setToStation(fromStation);
   };
 
-  // 2. Handle the search submission
   const handleSearch = (e) => {
     e.preventDefault();
-    // Construct the query string and navigate
-    const queryString = new URLSearchParams(searchParams).toString();
-    navigate(`/trains?${queryString}`);
+
+    if (fromStation === toStation) {
+      alert("Source and Destination cannot be the same!");
+      return;
+    }
+
+    // 🔹 The Magic: Push the state to the URL query parameters
+    navigate(`/trains?from=${fromStation}&to=${toStation}&date=${journeyDate}`);
   };
 
   return (
-    <form onSubmit={handleSearch} className="space-y-6">
-      {/* From / To Row */}
-      <div className="flex items-center gap-4 relative">
-        <div className="flex-1 relative">
-          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input 
-            type="text" 
-            name="from"
-            value={searchParams.from}
-            onChange={handleChange}
-            placeholder="From" 
-            className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" 
-            required
-          />
-        </div>
-        
-        <button type="button" onClick={handleSwap} className="absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-100 z-10">
-          <ArrowRightLeft className="w-4 h-4 text-gray-600" />
-        </button>
+    <div className="mt-6 w-full max-w-7xl mx-auto">
+      <form onSubmit={handleSearch} className="flex flex-col gap-4">
 
-        <div className="flex-1 relative">
-          <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input 
-            type="text" 
-            name="to"
-            value={searchParams.to}
-            onChange={handleChange}
-            placeholder="To" 
-            className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" 
-            required
-          />
-        </div>
-      </div>
+        {/* Row 1: From & To (Side by Side) */}
+        <div className="flex flex-col md:flex-row gap-3 relative">
 
-      {/* Date / Class Row */}
-      <div className="flex gap-4">
-        <div className="flex-1 relative">
-          <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <label className="absolute left-12 top-2 text-[10px] text-gray-400 font-medium">Date of Journey</label>
-          <input 
-            type="date" 
-            name="date"
-            value={searchParams.date}
-            onChange={handleChange}
-            className="w-full pl-12 pr-4 pt-6 pb-2 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" 
-            required
-          />
-        </div>
-        <div className="flex-1 relative cursor-pointer">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <label className="absolute left-12 top-2 text-[10px] text-gray-400 font-medium">Class</label>
-          <select 
-            name="ticketClass"
-            value={searchParams.ticketClass}
-            onChange={handleChange}
-            className="w-full pl-12 pr-8 pt-6 pb-2 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-semibold appearance-none cursor-pointer"
+          {/* From Station */}
+          <div className="w-full">
+            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">From</label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              {/* Removed appearance-none so the dropdown arrow shows */}
+              <select
+                value={fromStation}
+                onChange={(e) => setFromStation(e.target.value)}
+                className="w-full pl-10 pr-8 py-3 bg-white border-2 border-gray-100 rounded-xl font-bold text-gray-800 focus:outline-none focus:border-[#0b1b36] cursor-pointer"
+              >
+                {STATIONS.map(st => <option key={`from-${st.code}`} value={st.code}>{st.name} ({st.code})</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Floating Swap Button (Centered between inputs on desktop) */}
+          <button
+            type="button"
+            onClick={handleSwap}
+            className="hidden md:flex absolute left-1/2 top-[60%] -translate-x-1/2 -translate-y-1/2 z-10 p-2 bg-blue-50 border-4 border-white text-blue-600 rounded-full hover:bg-blue-100 transition shadow-sm items-center justify-center"
+            title="Swap Stations"
           >
-            <option value="All Classes">All Classes</option>
-            <option value="SL">Sleeper (SL)</option>
-            <option value="3A">AC 3 Tier (3A)</option>
-            <option value="2A">AC 2 Tier (2A)</option>
-          </select>
-          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-        </div>
-      </div>
+            <ArrowRightLeft className="w-4 h-4" />
+          </button>
 
-      <button type="submit" className="w-full py-4 bg-[#0b1b36] text-white rounded-xl font-bold text-lg hover:bg-blue-900 transition mt-4 shadow-lg shadow-blue-900/20">
-        Search Trains
-      </button>
-    </form>
+          {/* Mobile Swap Button (Only shows on small screens) */}
+          <div className="md:hidden flex justify-center -my-2 z-10">
+            <button type="button" onClick={handleSwap} className="p-2 bg-blue-50 text-blue-600 rounded-full border-2 border-white shadow-sm">
+              <ArrowRightLeft className="w-4 h-4 rotate-90" />
+            </button>
+          </div>
+
+          {/* To Station */}
+          <div className="w-full">
+            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">To</label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <select
+                value={toStation}
+                onChange={(e) => setToStation(e.target.value)}
+                className="w-full pl-10 pr-8 py-3 bg-white border-2 border-gray-100 rounded-xl font-bold text-gray-800 focus:outline-none focus:border-[#0b1b36] cursor-pointer"
+              >
+                {STATIONS.map(st => <option key={`to-${st.code}`} value={st.code}>{st.name} ({st.code})</option>)}
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Row 2: Journey Date */}
+        <div className="w-full">
+          <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Journey Date</label>
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="date"
+              value={journeyDate}
+              min={new Date().toISOString().split('T')[0]}
+              onChange={(e) => setJourneyDate(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-white border-2 border-gray-100 rounded-xl font-bold text-gray-800 focus:outline-none focus:border-[#0b1b36] cursor-pointer"
+            />
+          </div>
+        </div>
+
+        {/* Row 3: Submit Button */}
+        <div className="w-full mt-2">
+          <button
+            type="submit"
+            className="w-full py-4 bg-[#0b1b36] text-white font-bold text-lg rounded-xl hover:bg-blue-900 transition flex items-center justify-center gap-2 shadow-md"
+          >
+            <Search className="w-5 h-5" /> Search
+          </button>
+        </div>
+
+      </form>
+    </div>
   );
 };
 

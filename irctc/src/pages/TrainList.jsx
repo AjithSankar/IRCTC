@@ -23,6 +23,13 @@ const TrainList = () => {
     const controller = new AbortController(); // For cleanup in case of component unmount
 
     const fetchTrains = async () => {
+
+      if (!from || !to || !date) {
+        setError("Invalid search parameters. Please return to home and search again.");
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError('');
       try {
@@ -108,12 +115,12 @@ const TrainList = () => {
           Modify Search
         </button>
 
-        <button 
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-blue-300 text-gray-700 rounded-xl font-bold hover:bg-blue-100 transition shadow-sm"
-          >
-            <Home className="w-4 h-4" /> Return to Home
-          </button>
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 px-5 py-2.5 bg-white border border-blue-300 text-gray-700 rounded-xl font-bold hover:bg-blue-100 transition shadow-sm"
+        >
+          <Home className="w-4 h-4" /> Return to Home
+        </button>
 
       </div>
 
