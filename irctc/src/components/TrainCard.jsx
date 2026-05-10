@@ -59,7 +59,7 @@ const TrainCard = ({ train, journeyDate }) => {
     };
 
     return (
-        <div className="bg-white border border-gray-300 shadow-sm mb-4">
+        <div className="bg-white border border-gray-300 shadow-sm mb-4 [zoom:1.1]">
 
             {/* 🔹 HEADER: Bold Title, Spaced Runs On, Blue Link */}
             <div className="bg-[#f5f5f5] px-4 py-2 flex justify-between items-center border-b border-gray-200">

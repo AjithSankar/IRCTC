@@ -170,8 +170,8 @@ const TrainList = () => {
     <div className="min-h-screen bg-[#f5f5f5] pb-12">
 
       {/* 🔹 DYNAMIC HEADER BAR */}
-      <div className="bg-[#0b1b36] text-white p-4 sticky top-0 z-20 shadow-md">
-        <div className="max-w-[1400px] w-full mx-auto flex items-center px-2">
+      <div className="bg-[#0b1b36] text-white p-3 sticky top-0 z-20 shadow-md">
+        <div className="w-full px-2 mx-auto flex items-center">
 
           {!isModifying ? (
             <div className="flex w-full justify-between items-center">
@@ -205,12 +205,12 @@ const TrainList = () => {
         </div>
       </div>
 
-      <div className="max-w-[1400px] w-full mx-auto flex flex-col lg:flex-row gap-4 mt-4 px-2">
+      <div className="w-full px-2 mx-auto flex flex-col lg:flex-row gap-2 mt-4">
 
         {/* LEFT SIDEBAR: Hardcoded to 260px width, pushed to far left */}
         <div className="w-full lg:w-[260px] shrink-0">
           <div className="bg-white border border-gray-300 shadow-sm text-[13px]">
-            <div className="bg-gray-100 p-3 border-b border-gray-300 font-bold text-gray-800">Refine Results</div>
+            <div className="text-[15px] font-bold text-gray-800 mb-3 bg-white p-3 border border-gray-300 flex justify-between items-center shadow-sm">Refine Results</div>
 
             <div className="p-4 border-b border-gray-200">
               <div className="font-bold text-[11px] text-gray-500 mb-2 uppercase tracking-wide">Journey Class</div>
