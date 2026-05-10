@@ -11,7 +11,8 @@ import TicketConfirmation from "./components/TicketConfirmation";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import MyBookings from "./components/MyBookings";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import AdminRoute from "./components/auth/AdminRoute";  
+import AdminRoute from "./components/auth/AdminRoute"; 
+import Checkout from "./components/Checkout"; 
 
 function App() {
   return (
@@ -24,12 +25,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
 
-          <Route path="/book" element={
+          {/* <Route path="/book" element={
             <ProtectedRoute>
               <BookTicket />
             </ProtectedRoute>
 
-          } />
+          } /> */}
 
 
           <Route path="/processing/:bookingId" element={
@@ -56,6 +57,12 @@ function App() {
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
+          } />
+
+          <Route path="/book" element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
           } />
 
         </Routes>
