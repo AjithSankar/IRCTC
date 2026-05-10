@@ -15,9 +15,8 @@ const STATIONS = [
 const SearchForm = () => {
   const navigate = useNavigate();
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const defaultDate = tomorrow.toISOString().split('T')[0];
+  const today = new Date();
+  const defaultDate = today.toISOString().split('T')[0];
 
   // Controlled Form State
   const [fromStation, setFromStation] = useState('MAS');
