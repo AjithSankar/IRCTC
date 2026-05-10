@@ -13,6 +13,7 @@ import MyBookings from "./components/MyBookings";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminRoute from "./components/auth/AdminRoute"; 
 import Checkout from "./components/Checkout"; 
+import ReviewJourney from "./components/ReviewJourney";
 
 function App() {
   return (
@@ -62,6 +63,12 @@ function App() {
           <Route path="/book" element={
             <ProtectedRoute>
               <Checkout />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/review" element={
+            <ProtectedRoute>
+              <ReviewJourney />
             </ProtectedRoute>
           } />
 

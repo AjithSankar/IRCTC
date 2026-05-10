@@ -3,6 +3,31 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { AlertTriangle, MapPin, X, Plus, Loader2 } from 'lucide-react';
 import api from '../api/axiosSetup'; // 
 
+
+  // 🔹 Helper function to format date from YYYY-MM-DD to "Sun,10 May"
+  export const formatDateForDisplay = (dateString) => {
+    const date = new Date(`${dateString}T00:00:00`);
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    const dayOfWeek = dayNames[date.getDay()];
+    const dayOfMonth = date.getDate();
+    const month = monthNames[date.getMonth()];
+    
+    return `${dayOfWeek},${dayOfMonth} ${month}`;
+  };
+
+
+  export const getClassNameForType = (type) => {
+    switch (type) {
+      case 'SL': return 'SLEEPER';
+      case '3A': return 'AC 3 Tier';
+      case '2A': return 'AC 2 Tier';
+      case '1A': return 'AC 1 Tier';
+      default: return 'SLEEPER';
+    }
+  };
+
 const Checkout = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -79,35 +104,11 @@ const handleContinue = (e) => {
         passengers, 
         checkoutData, 
         journeyDate, 
-        totalFare,
-        userData
+        totalFare
       } 
     });
   };
 
-  // 🔹 Helper function to format date from YYYY-MM-DD to "Sun,10 May"
-  const formatDateForDisplay = (dateString) => {
-    const date = new Date(`${dateString}T00:00:00`);
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
-    const dayOfWeek = dayNames[date.getDay()];
-    const dayOfMonth = date.getDate();
-    const month = monthNames[date.getMonth()];
-    
-    return `${dayOfWeek},${dayOfMonth} ${month}`;
-  };
-
-
-  const getClassNameForType = (type) => {
-    switch (type) {
-      case 'SL': return 'SLEEPER';
-      case '3A': return 'AC 3 Tier';
-      case '2A': return 'AC 2 Tier';
-      case '1A': return 'AC 1 Tier';
-      default: return 'SLEEPER';
-    }
-  };
 
   // 🔹 LOADING & ERROR SCREENS
   if (loading) {
