@@ -41,6 +41,13 @@ const SearchForm = () => {
     navigate(`/trains?from=${fromStation}&to=${toStation}&date=${journeyDate}`);
   };
 
+  const formatLocalDate = (date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   return (
     <div className="mt-6 w-full max-w-7xl mx-auto">
       <form onSubmit={handleSearch} className="flex flex-col gap-4">
@@ -106,7 +113,7 @@ const SearchForm = () => {
             <input
               type="date"
               value={journeyDate}
-              min={new Date().toISOString().split('T')[0]}
+              min={formatLocalDate(new Date())}
               onChange={(e) => setJourneyDate(e.target.value)}
               className="w-full pl-10 pr-4 py-3 bg-white border-2 border-gray-100 rounded-xl font-bold text-gray-800 focus:outline-none focus:border-[#0b1b36] cursor-pointer"
             />

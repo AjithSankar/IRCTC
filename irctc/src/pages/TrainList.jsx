@@ -84,10 +84,17 @@ const TrainList = () => {
     return dates;
   };
 
+  const formatLocalDate = (date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   // 🔹 HANDLER: Update URL when a date tab is clicked
   const handleDateClick = (newDateObj) => {
     // Format back to YYYY-MM-DD
-    const newDateString = newDateObj.toISOString().split('T')[0];
+    const newDateString = formatLocalDate(newDateObj);
 
     // Update the URL parameters (which auto-triggers the useEffect!)
     setSearchParams({
@@ -149,7 +156,7 @@ const TrainList = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 mb-8 overflow-x-auto no-scrollbar">
           <div className="flex gap-2 min-w-max">
             {sliderDates.map((dateObj, index) => {
-              const dateString = dateObj.toISOString().split('T')[0];
+              const dateString = formatLocalDate(dateObj);
               const isSelected = dateString === journeyDate;
 
               const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
@@ -205,7 +212,7 @@ const TrainList = () => {
                       <span className="text-sm font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded">#{train.trainNo}</span>
                     </h2>
                     <div className="flex items-center gap-4 mt-2 text-sm font-bold text-gray-600">
-                      <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 06:00 AM</span>
+                      <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {train.departureTime}</span>
                       <span className="text-gray-300">|</span>
                       <span>Runs On: <span className="text-green-600">{train.runsOn || 'DAILY'}</span></span>
                     </div>
@@ -216,10 +223,10 @@ const TrainList = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {train.classes.map((cls, index) => {
 
-                    const statusText = cls.availabilityStatus || cls.availability || cls.status || cls.availabilityStr || '';
+                    const statusText = cls.availability;
                     const isAvailable = statusText.startsWith('AVAILABLE');
                     const isWL = statusText.startsWith('WL');
-                    const classType = cls.className || cls.classType || 'SL';
+                    const classType = cls.className || cls.classType || cls.type || 'SL';
 
                     return (
                       <div
