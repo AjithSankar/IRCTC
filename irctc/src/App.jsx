@@ -14,6 +14,7 @@ import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminRoute from "./components/auth/AdminRoute"; 
 import Checkout from "./components/Checkout"; 
 import ReviewJourney from "./components/ReviewJourney";
+import Payment from "./components/Payment";
 
 function App() {
   return (
@@ -69,6 +70,12 @@ function App() {
           <Route path="/review" element={
             <ProtectedRoute>
               <ReviewJourney />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/payment" element={
+            <ProtectedRoute>
+              <Payment />
             </ProtectedRoute>
           } />
 
